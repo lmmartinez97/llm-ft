@@ -35,7 +35,6 @@ sns.color_palette("hls", 8)
 def print_bl():
     print("\n")
 
-
 def print_red(*args):
     for arg in args:
         cprint(arg, "red", end=' ')  # Using end=' ' to print all arguments on the same line
@@ -328,14 +327,19 @@ class GroupExtractor:
             raise RuntimeError("No groups to save. Please run the group creation pipeline first.")
 
         json_dict = {}
-        # Save each group to a separate CSV file
+        # Save each group to a separate json file
         for i, group in enumerate(self.groups):
             json_dict[f'group_{i}'] = group.to_json(orient='records')
 
-        with open(save_path + f"/groups_{self.dataset_index}", 'w') as f:
+        with open(save_path + f"/groups_{self.dataset_index}.json", 'w') as f:
             json.dump(json_dict, f)
+
+        #save ego vehicles list to a separate file
+        with open(save_path + f"/ego_vehicles_{self.dataset_index}.json", 'w') as f:
+            json.dump(self.ego_vehicles, f)
         
-        print(f"Groups saved to {save_path}")
+        print(f"Groups saved to {save_path}" + f"/groups_{self.dataset_index}.json")
+        print(f"Ego vehicles saved to {save_path}" + f"/ego_vehicles_{self.dataset_index}.json")
     
     def plot_groups(self, group_num: int = 0, save: bool = False, save_path: str = None):
         """
@@ -543,7 +547,16 @@ class GroupExtractor:
         plt.show()
 
 def main():
-    dataset_location = "/home/lmmartinez/Tesis/datasets/highD/data/"
+    lookback = 4
+    dataset_location = "/Users/lmiguelmartinez/Tesis/datasets/highD/data/"
+    #dataset_location = "/home/lmiguelmartinez/Tesis/datasets/highD/data/"
+    save_location = "/Users/lmiguelmartinez/Tesis/datasets/highD/groups_1000_lookback4"
+    #save_location = "/home/lmiguelmartinez/Tesis/datasets/highD/groups_1000_lookback4"
+
+    print("Starting group extraction pipeline")
+    print("Reading data from: ", dataset_location)
+    print("Saving data to: ", save_location)
+    print_bl()
 
     timing_df = pd.DataFrame(columns=["initialization", "filtering", "windowing", "ego_vehicles", "grouping", "saving", "total"])
 
@@ -564,7 +577,7 @@ def main():
         print_blue(f"Filtering scene data took {end - start} seconds")
 
         start = time()
-        scene_data.get_frame_windows(window_size=4)
+        scene_data.get_frame_windows(window_size=lookback)
         end = time()
         timing_df.loc[i, "windowing"] = end - start
         print_blue(f"Window extraction in scene data took {end - start} seconds")
@@ -582,14 +595,15 @@ def main():
         print_blue(f"Grouping the scene data took {end - start} seconds")
 
         start = time()
-        scene_data.save_groups(save_path="/media/lmmartinez/DATA/lmmartinez/groups_highD")
+        scene_data.save_groups(save_path=save_location)
         end = time()
         timing_df.loc[i, "saving"] = end - start
         print_blue(f"Saving scene data took {end - start} seconds")
 
         timing_df.loc[i, "total"] = timing_df.loc[i].sum()
     
-    timing_df.to_csv("/media/lmmartinez/DATA/lmmartinez/timing_highD.csv")
+    timing_df.to_csv("/Users/lmiguelmartinez/Tesis/datasets/highD/timing_highD_lookback4.csv")
+    #timing_df.to_csv("/home/lmiguelmartinez/Tesis/datasets/highD/timing_highD.csv")
 
 if __name__ == "__main__":
     main()
