@@ -1,0 +1,16 @@
+Answer format:
+    - The answer needs to have the following content:
+        - Provide an analysis of the situation. DO NOT list every value of information you have been provided, just provide a qualitative analysis of the situation and use data whenever you need to support your reasoning.
+        - Choose ONE possible action from the list, according to your analysis of the situation and focusing on safety and efficiency.
+        - Provide an explanation of the action you have chosen. Support your explanation with as much data as needed.
+    - The template the answer must follow is the following:
+        - SITUATION ANALYSIS: here, include your reasoning and the insight you have obtained from the data. Explain the situation without inlcuding any conditionals, but be sure to consider the possible uncertainty that underlies the maneuver.
+        - PLANNING: include the action you have chosen.
+        - ASSESSMENT: evaluate the action in terms of safety and efficiency, considering interactions between vehicles and the geometry of the road.
+    - At the end of your answer, include a .json formatted string with the following format:
+        [
+            {
+                "action": INCLUDE YOUR ACTION HERE,
+                "explanation": INCLUDE YOUR EXPLANATION FOR THE ACTION THAT WAS CHOSEN HERE,
+            }
+        ]
