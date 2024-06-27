@@ -96,6 +96,10 @@ class GroupsLoader:
 
         return self.groups, self.ego_vehicles
 
+import pandas as pd
+import json
+from typing import List, Dict, Union
+
 class PromptPopulator:
     """
     Class to populate the prompts.
@@ -115,9 +119,6 @@ class PromptPopulator:
         self.dataset_index = dataset_index
         self.prompts = []
 
-        print_green(f"Generating prompts for dataset {self.dataset_index}. \n")
-        print_green(f"Loading templates from {self.template_path}. \n")
-
         ### Error handling for loading groups and templates
         try:
             self.groups_loader = GroupsLoader(self.groups_location, self.dataset_index)
@@ -125,7 +126,7 @@ class PromptPopulator:
         except Exception as e:
             raise RuntimeError(f"Failed to load groups and ego vehicles: {e}")
         try:
-            self.instructions_template, self.task_template, self.role_template = self.load_templates()
+            self.instructions_template, self.task_template, self.role_template, self.answer_template = self.load_templates()
         except Exception as e:
             raise RuntimeError(f"Failed to load templates: {e}")
 
@@ -148,12 +149,14 @@ class PromptPopulator:
                 task_template = f.read()
             with open(f"{self.template_path}/role_template.txt", 'r') as f:
                 role_template = f.read()
+            with open(f"{self.template_path}/answer_template.txt", 'r') as f:
+                answer_template = f.read()
         except FileNotFoundError as e:
             raise FileNotFoundError(f"Template file not found: {e.filename}")
         except IOError as e:
             raise IOError(f"Error reading template file: {e}")
 
-        return [instructions_template, task_template, role_template]
+        return instructions_template, task_template, role_template, answer_template
     
     def relative_group(self, group_index: int) -> pd.DataFrame:
         """
@@ -268,7 +271,7 @@ class PromptPopulator:
         frame_groups = group.groupby('frame')
 
         # Generate system prompt
-        system_prompt = f"{self.role_template}\n{self.instructions_template}\n"
+        system_prompt = f"{self.role_template}\n\n{self.instructions_template}\n\n{self.answer_template}\n\n"
 
         # Generate user prompt
         user_prompt = (
@@ -308,13 +311,13 @@ class PromptPopulator:
         ### Error handling for writing to file
         try:
             prompt = self.populate_prompt(group_index)
-            print(f"Saving prompt to file {filename}. \n")
+            print(f"Saving prompt to file {filename}...")
             print(f"System prompt:\n{prompt[0]['content']}")
             print(f"User prompt:\n{prompt[1]['content']}")
 
             with open(filename, 'w') as file:
                 for message in prompt:
-                    file.write(f"{message['role']}:\n{message['content']}\n")
+                    file.write(f"{message['content']}\n")
         except IOError as e:
             raise IOError(f"Error writing to file {filename}: {e}")
 
@@ -342,22 +345,24 @@ class PromptPopulator:
         filename = folder + '/' + f"prompts_{self.dataset_index}.json"
         try:
             with open(filename, 'w') as file:
-                print_green(f"Saving prompts to file {filename}. \n")
                 json.dump(all_prompts, file, indent=4)
         except IOError as e:
             raise IOError(f"Error writing to file {filename}: {e}")
 
 def main():
-    dataset_location = "/Users/lmiguelmartinez/Tesis/datasets/highD"
-    groups_location = "/Users/lmiguelmartinez/Tesis/datasets/highD/groups_1000_lookback5"
-    prompts_destination = "/Users/lmiguelmartinez/Tesis/datasets/highD/prompts_1000_lookback5"
+    #groups_location = "/Users/lmiguelmartinez/Tesis/datasets/highD/groups_1000_lookback5"
+    groups_location = "../data/groups_1000_lookback5"
+    #prompts_destination = "/Users/lmiguelmartinez/Tesis/datasets/highD/prompts_1000_lookback5"
+    prompts_destination = "../data/prompts_1000_lookback5"
     template_path = "./prompts"
 
     print(f"Loading groups from {groups_location}. \n")
 
     for i in range(1,61):
+        print_blue(f"Generating prompts for dataset {i}...")
         prompt_populator = PromptPopulator(groups_location=groups_location, template_path=template_path, dataset_index=i)
         prompt_populator.generate_and_save_all_prompts(folder=prompts_destination)
+        print_green(f"Prompts for dataset {i} generated successfully. Saved at {prompts_destination}.\n")
 
 if __name__ == "__main__":
     main()
