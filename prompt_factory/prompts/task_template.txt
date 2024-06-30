@@ -1,6 +1,6 @@
 Task:
 	- Given all this information, your task is to:
-		- Explain the behavior of the vehicle marked as ego, considering the interactions between itself and other vehicles, as well as their relative position, velocity and acceleration. 
+		- Choose the next action of the vehicle marked as ego from the provided list, considering the interactions between itself and other vehicles, as well as their relative position, velocity and acceleration. 
 		- Assess the validity of the action in terms of security and efficiency.
-		- Determine other actions that might have been safer or more efficient, if there are any.
+		- Follow the answer template on its entirety.
 	- Include every element of your reasoning in your answer.
