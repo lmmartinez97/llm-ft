@@ -317,7 +317,7 @@ class PromptPopulator:
         except IOError as e:
             raise IOError(f"Error writing to file {filename}: {e}")
         
-    def save_top_20_longest_prompts(self, filename: str = 'top_20_longest_prompts.json'):
+    def save_top_20_longest_prompts(self, folder: str = None):
         """
         Generate all prompts, find the 20 longest, and save them to a file.
 
@@ -354,6 +354,7 @@ class PromptPopulator:
         ]
 
         # Save the top 20 longest prompts to a JSON file
+        filename = folder + '/' + f"prompts_{self.dataset_index}.json"
         try:
             with open(filename, 'w') as file:
                 json.dump(top_20_prompts_content, file, indent=4)
@@ -394,16 +395,16 @@ def main():
     groups_location = "../data/groups_1000_lookback5"
     #prompts_destination = "/Users/lmiguelmartinez/Tesis/datasets/highD/prompts_1000_lookback5"
     prompts_destination = "../data/prompts_1000_lookback5"
-    generator_destination = "../data/generator_1000_lookback5"
+    generator_destination = "../data/generation_1000_lookback5"
     template_path = "./prompts"
 
     print(f"Loading groups from {groups_location}. \n")
 
     for i in range(1,61):
-        print_blue(f"Generating prompts for dataset {i}...")
+        print_blue(f"Generating prompts for dataset {i}... \n")
         prompt_populator = PromptPopulator(groups_location=groups_location, template_path=template_path, dataset_index=i)
         prompt_populator.generate_and_save_all_prompts(folder=prompts_destination)
-        prompt_populator.save_top_20_longest_prompts(filename=generator_destination)
+        prompt_populator.save_top_20_longest_prompts(folder=generator_destination)
         print_green(f"Prompts for dataset {i} generated successfully. Saved at {prompts_destination}.\n")
         print_green(f"Top 20 longest prompts for dataset {i} saved at {generator_destination}.\n")
 
