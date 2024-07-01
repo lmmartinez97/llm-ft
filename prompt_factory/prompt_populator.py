@@ -96,6 +96,7 @@ class GroupsLoader:
 
         return self.groups, self.ego_vehicles
 
+
 import pandas as pd
 import json
 from typing import List, Dict, Union
@@ -292,7 +293,7 @@ class PromptPopulator:
         ]
         
         return message
-
+    
     def save_prompt_to_file(self, group_index: int = 0, filename: str = 'prompt.txt'):
         """
         Save the populated prompt to a file. Only for testing purposes. Main saving function is NOT this one.
