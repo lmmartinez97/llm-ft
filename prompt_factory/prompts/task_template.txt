@@ -1,6 +1,3 @@
 Task:
-	- Given all this information, your task is to:
-		- Choose the next action of the vehicle marked as ego from the provided list, considering the interactions between itself and other vehicles, as well as their relative position, velocity and acceleration. 
-		- Assess the validity of the action in terms of security and efficiency.
-		- Follow the answer template on its entirety.
-	- Include every element of your reasoning in your answer.
+	- Go field by field of the answer template, and fill them out according to their explanation.
+	- If you can not follow the answer template, explain why.

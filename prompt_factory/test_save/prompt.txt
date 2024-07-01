@@ -17,49 +17,14 @@ Instructions:
 		- The direction in which a vehicle is driving is represented by the sign of its longitudinal velocity. 
 		- A positive value in the x coordinate means that the vehicle in consideration is ahead of the ego vehicle.
 		- A negative value in the x coordinate means that the vehicle in consideration is behind the ego vehicle.
-		- A positive value in the y coordinate means that the vehicle in consideration is on the left of the ego vehicle.
-		- A negative value in the y coordinate means that the vehicle in consideration is on the right of the ego vehicle.
-		- Small values in the y coordinate indicate that the vehicle in consideration is on the same lane as the ego vehicle
+		- A positive value in the y coordinate means that the vehicle in consideration is to the left of the ego vehicle.
+		- A negative value in the y coordinate means that the vehicle in consideration is to the right of the ego vehicle.
+		- Small values in the y coordinate indicate that the vehicle in consideration is on the same lane as the ego vehicle.
+		- Small values in lateral velocity and acceeleration indicate corrective actions to maintain a vehicle on the center of its lane.
 	- Road information:
 		- Vehicles are legally required to drive on the right lane.
 		- The left lane is intended to overtake only.
 		- The middle lane is not always present. When it is, it can be used to overtake slow traffic on the right lane.
-	- Possible actions:
-		- The ego vehicle can perform the following actions:
-			- HOLD_SPEED: the ego vehicle maintains its lane and speed.
-			- ACCELERATE: the ego vehicle maintains its lane, and accelerates.
-			- DECELERATE: the ego vehicle maintains its lane, and slows down.
-			- SHIFT_LEFT_HOLD: the ego vehicle shifts one lane to the left, maintaining its current speed.
-			- SHIFT_LEFT_SLOW: the ego vehicle shifts one lane to the left, and slows down.
-			- SHIFT_LEFT_FAST: the ego vehicle shifts one lane to the left, and accelerates.
-			- SHIFT_RIGHT_HOLD: the ego vehicle shifts one lane to the right, maintaining its current speed.
-			- SHIFT_RIGHT_SLOW: the ego vehicle shifts one lane to the right, and slows down.
-			- SHIFT_RIGHT_FAST: the ego vehicle shifts one lane to the right, and accelerates.
-
-Answer format:
-    - The answer needs to have the following content:
-        - Provide an analysis of the situation. DO NOT list every value of information you have been provided, just provide a qualitative analysis of the situation and use data whenever you need to support your reasoning.
-        - Choose ONE possible action from the list, according to your analysis of the situation and focusing on safety and efficiency.
-        - Provide an explanation of the action you have chosen. Support your explanation with as much data as needed.
-    - The format of your answer is listed below, and is marked with two symbols:
-		- Symbol "<<<" marks the start of the template.
-		- Symbol ">>>" marks the end of the template.
-        - Symbol _ denotes start and end of explanation of content.
-    - Every time you speak about a vehicle, be sure to include a reference to its ID.
-
-<<<
-SITUATION ANALYSIS: _Include here your reasoning about the geometrical analysis of the situation, as well as any other information you deem fit_.
-ACTION: _From the list of actions stated above, choose ONE and only ONE, whichever you think fits the situation best_.
-EXPLANATION: _Explain why you chose the action in the previous section_.
-JSON:
-[
-    {
-        "action": _State here the explicit name of the action_,
-        "explanation": _Summarize the explanation here_,
-    }
-]
->>>
-
 
 Vehicles present in the group have ids: 3, 7, 10, 11. The ego vehicle is vehicle with id 11.
 
@@ -85,8 +50,41 @@ At t=0.0 s, vehicle with id 10.0 is at position (14.069999999999993, 0.019999999
 At t=0.0 s, vehicle with id 11.0 is at position (0.0, 0.0) with longitudinal speed 23.92 m/s and lateral speed 0.35000000000000003 m/s. The longitudinal acceleration is 0.22 m/s^2 and the lateral acceleration is 0.46 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
 
 Task:
-	- Given all this information, your task is to:
-		- Choose the next action of the vehicle marked as ego from the provided list, considering the interactions between itself and other vehicles, as well as their relative position, velocity and acceleration. 
-		- Assess the validity of the action in terms of security and efficiency.
-		- Follow the answer template on its entirety.
-	- Include every element of your reasoning in your answer.
+	- Go field by field of the answer template, and fill them out according to their explanation.
+	- If you can not follow the answer template, explain why.
+
+Answer template:
+    - The answer needs to have the following content:
+        - Provide an analysis of the situation. DO NOT list every value of information you have been provided, just provide a qualitative analysis of the situation and use data whenever you need to support your reasoning.
+        - Choose ONE possible action from the list, according to your analysis of the situation and focusing on safety and efficiency.
+        - Provide an explanation of the action you have chosen. Support your explanation with as much data as needed.
+    - The format of your answer is listed below, and is marked with two symbols:
+		- Symbol "<<<" marks the start of the template.
+		- Symbol ">>>" marks the end of the template.
+        - Symbol _ denotes start and end of explanation of content.
+    - Every time you speak about a vehicle, be sure to include a reference to its ID.
+
+	- Possible actions:
+		- The ego vehicle can perform the following actions:
+			- HOLD_SPEED: the ego vehicle maintains its lane and speed.
+			- ACCELERATE: the ego vehicle maintains its lane, and accelerates.
+			- DECELERATE: the ego vehicle maintains its lane, and slows down.
+			- SHIFT_LEFT_HOLD: the ego vehicle shifts one lane to the left, maintaining its current speed.
+			- SHIFT_LEFT_SLOW: the ego vehicle shifts one lane to the left, and slows down.
+			- SHIFT_LEFT_FAST: the ego vehicle shifts one lane to the left, and accelerates.
+			- SHIFT_RIGHT_HOLD: the ego vehicle shifts one lane to the right, maintaining its current speed.
+			- SHIFT_RIGHT_SLOW: the ego vehicle shifts one lane to the right, and slows down.
+			- SHIFT_RIGHT_FAST: the ego vehicle shifts one lane to the right, and accelerates.
+
+<<<
+SITUATION ANALYSIS: _Include here your reasoning about the geometrical analysis of the situation, as well as any other information you deem fit_.
+ACTION: _From the list of actions stated above, choose ONE and only ONE, whichever you think fits the situation best_.
+EXPLANATION: _Explain why you chose the action in the previous section_.
+JSON:
+[
+    {
+        "action": _State here the explicit name of the action_,
+        "explanation": _Summarize the explanation here_,
+    }
+]
+>>>

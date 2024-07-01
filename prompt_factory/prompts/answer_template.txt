@@ -1,4 +1,4 @@
-Answer format:
+Answer template:
     - The answer needs to have the following content:
         - Provide an analysis of the situation. DO NOT list every value of information you have been provided, just provide a qualitative analysis of the situation and use data whenever you need to support your reasoning.
         - Choose ONE possible action from the list, according to your analysis of the situation and focusing on safety and efficiency.
@@ -8,6 +8,18 @@ Answer format:
 		- Symbol ">>>" marks the end of the template.
         - Symbol _ denotes start and end of explanation of content.
     - Every time you speak about a vehicle, be sure to include a reference to its ID.
+
+	- Possible actions:
+		- The ego vehicle can perform the following actions:
+			- HOLD_SPEED: the ego vehicle maintains its lane and speed.
+			- ACCELERATE: the ego vehicle maintains its lane, and accelerates.
+			- DECELERATE: the ego vehicle maintains its lane, and slows down.
+			- SHIFT_LEFT_HOLD: the ego vehicle shifts one lane to the left, maintaining its current speed.
+			- SHIFT_LEFT_SLOW: the ego vehicle shifts one lane to the left, and slows down.
+			- SHIFT_LEFT_FAST: the ego vehicle shifts one lane to the left, and accelerates.
+			- SHIFT_RIGHT_HOLD: the ego vehicle shifts one lane to the right, maintaining its current speed.
+			- SHIFT_RIGHT_SLOW: the ego vehicle shifts one lane to the right, and slows down.
+			- SHIFT_RIGHT_FAST: the ego vehicle shifts one lane to the right, and accelerates.
 
 <<<
 SITUATION ANALYSIS: _Include here your reasoning about the geometrical analysis of the situation, as well as any other information you deem fit_.
@@ -20,4 +32,3 @@ JSON:
         "explanation": _Summarize the explanation here_,
     }
 ]
->>>
