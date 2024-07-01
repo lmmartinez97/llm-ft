@@ -17,41 +17,13 @@ Instructions:
 		- The direction in which a vehicle is driving is represented by the sign of its longitudinal velocity. 
 		- A positive value in the x coordinate means that the vehicle in consideration is ahead of the ego vehicle.
 		- A negative value in the x coordinate means that the vehicle in consideration is behind the ego vehicle.
-		- A positive value in the y coordinate means that the vehicle in consideration is to the left of the ego vehicle.
-		- A negative value in the y coordinate means that the vehicle in consideration is to the right of the ego vehicle.
-		- Small values in the y coordinate indicate that the vehicle in consideration is on the same lane as the ego vehicle.
-		- Small values in lateral velocity and acceeleration indicate corrective actions to maintain a vehicle on the center of its lane.
+		- A positive value in the y coordinate means that the vehicle in consideration is on the left of the ego vehicle.
+		- A negative value in the y coordinate means that the vehicle in consideration is on the right of the ego vehicle.
+		- Small values in the y coordinate indicate that the vehicle in consideration is on the same lane as the ego vehicle
 	- Road information:
 		- Vehicles are legally required to drive on the right lane.
 		- The left lane is intended to overtake only.
 		- The middle lane is not always present. When it is, it can be used to overtake slow traffic on the right lane.
-
-Vehicles present in the group have ids: 3, 7, 10, 11. The ego vehicle is vehicle with id 11.
-
-The information for each vehicle is as follows:
-At t=-4.0 s, vehicle with id 3.0 is at position (10.919999999999987, 3.8900000000000006) with longitudinal speed 35.88 m/s and lateral speed 0.03 m/s. The longitudinal acceleration is 0.2 m/s^2 and the lateral acceleration is 0.02 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
-At t=-4.0 s, vehicle with id 7.0 is at position (-22.600000000000023, 3.5) with longitudinal speed 32.91 m/s and lateral speed 0.16 m/s. The longitudinal acceleration is 0.37 m/s^2 and the lateral acceleration is -0.05 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
-At t=-4.0 s, vehicle with id 10.0 is at position (18.329999999999984, -0.10999999999999943) with longitudinal speed 23.36 m/s and lateral speed 0.09 m/s. The longitudinal acceleration is 0.1 m/s^2 and the lateral acceleration is 0.09 m/s^2. The length of the vehicle is 9.2 m and its width is 2.5 m.
-At t=-4.0 s, vehicle with id 11.0 is at position (0.0, 0.0) with longitudinal speed 24.8 m/s and lateral speed 0.05 m/s. The longitudinal acceleration is -0.29 m/s^2 and the lateral acceleration is 0.09 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
-At t=-3.0 s, vehicle with id 3.0 is at position (22.25999999999999, 3.8200000000000003) with longitudinal speed 36.05 m/s and lateral speed 0.04 m/s. The longitudinal acceleration is 0.13 m/s^2 and the lateral acceleration is -0.0 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
-At t=-3.0 s, vehicle with id 7.0 is at position (-14.140000000000015, 3.509999999999998) with longitudinal speed 33.28 m/s and lateral speed 0.15 m/s. The longitudinal acceleration is 0.36 m/s^2 and the lateral acceleration is -0.01 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
-At t=-3.0 s, vehicle with id 10.0 is at position (17.129999999999995, -0.10000000000000142) with longitudinal speed 23.35 m/s and lateral speed 0.07 m/s. The longitudinal acceleration is -0.12 m/s^2 and the lateral acceleration is -0.02 m/s^2. The length of the vehicle is 9.2 m and its width is 2.5 m.
-At t=-3.0 s, vehicle with id 11.0 is at position (0.0, 0.0) with longitudinal speed 24.49 m/s and lateral speed 0.11 m/s. The longitudinal acceleration is -0.33 m/s^2 and the lateral acceleration is -0.02 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
-At t=-2.0 s, vehicle with id 3.0 is at position (34.039999999999964, 3.7799999999999976) with longitudinal speed 36.14 m/s and lateral speed 0.04 m/s. The longitudinal acceleration is 0.08 m/s^2 and the lateral acceleration is -0.01 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
-At t=-2.0 s, vehicle with id 7.0 is at position (-5.030000000000001, 3.6099999999999994) with longitudinal speed 33.63 m/s and lateral speed 0.14 m/s. The longitudinal acceleration is 0.35000000000000003 m/s^2 and the lateral acceleration is -0.07 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
-At t=-2.0 s, vehicle with id 10.0 is at position (16.060000000000002, -0.14000000000000057) with longitudinal speed 23.17 m/s and lateral speed 0.05 m/s. The longitudinal acceleration is -0.21 m/s^2 and the lateral acceleration is 0.03 m/s^2. The length of the vehicle is 9.2 m and its width is 2.5 m.
-At t=-2.0 s, vehicle with id 11.0 is at position (0.0, 0.0) with longitudinal speed 24.15 m/s and lateral speed -0.01 m/s. The longitudinal acceleration is -0.31 m/s^2 and the lateral acceleration is -0.04 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
-At t=-1.0 s, vehicle with id 3.0 is at position (46.190000000000055, 3.8500000000000014) with longitudinal speed 36.22 m/s and lateral speed 0.02 m/s. The longitudinal acceleration is 0.08 m/s^2 and the lateral acceleration is -0.05 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
-At t=-1.0 s, vehicle with id 7.0 is at position (4.730000000000018, 3.740000000000002) with longitudinal speed 33.96 m/s and lateral speed 0.01 m/s. The longitudinal acceleration is 0.30000000000000004 m/s^2 and the lateral acceleration is -0.1 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
-At t=-1.0 s, vehicle with id 10.0 is at position (15.020000000000039, -0.00999999999999801) with longitudinal speed 22.95 m/s and lateral speed 0.13 m/s. The longitudinal acceleration is -0.22 m/s^2 and the lateral acceleration is -0.01 m/s^2. The length of the vehicle is 9.2 m and its width is 2.5 m.
-At t=-1.0 s, vehicle with id 11.0 is at position (0.0, 0.0) with longitudinal speed 23.9 m/s and lateral speed -0.02 m/s. The longitudinal acceleration is -0.14 m/s^2 and the lateral acceleration is 0.18 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
-At t=0.0 s, vehicle with id 7.0 is at position (15.009999999999991, 3.6000000000000014) with longitudinal speed 34.21 m/s and lateral speed -0.06 m/s. The longitudinal acceleration is 0.2 m/s^2 and the lateral acceleration is -0.04 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
-At t=0.0 s, vehicle with id 10.0 is at position (14.069999999999993, 0.019999999999999574) with longitudinal speed 22.71 m/s and lateral speed 0.05 m/s. The longitudinal acceleration is -0.26 m/s^2 and the lateral acceleration is -0.12 m/s^2. The length of the vehicle is 9.2 m and its width is 2.5 m.
-At t=0.0 s, vehicle with id 11.0 is at position (0.0, 0.0) with longitudinal speed 23.92 m/s and lateral speed 0.35000000000000003 m/s. The longitudinal acceleration is 0.22 m/s^2 and the lateral acceleration is 0.46 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
-
-Task:
-	- Go field by field of the answer template, and fill them out according to their explanation.
-	- If you can not follow the answer template, explain why.
 
 Answer template:
     - The answer needs to have the following content:
@@ -88,3 +60,30 @@ JSON:
     }
 ]
 >>>
+
+
+Vehicles present in the group have ids: 3, 7, 10, 11. The ego vehicle is vehicle with id 11.
+
+The information for each vehicle is as follows:
+At t=-4.0 s, vehicle with id 3.0 is at position (10.92, 3.89) with longitudinal speed 35.88 m/s and lateral speed 0.03 m/s. The longitudinal acceleration is 0.20 m/s^2 and the lateral acceleration is 0.02 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
+At t=-4.0 s, vehicle with id 7.0 is at position (-22.60, 3.50) with longitudinal speed 32.91 m/s and lateral speed 0.16 m/s. The longitudinal acceleration is 0.37 m/s^2 and the lateral acceleration is -0.05 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
+At t=-4.0 s, vehicle with id 10.0 is at position (18.33, -0.11) with longitudinal speed 23.36 m/s and lateral speed 0.09 m/s. The longitudinal acceleration is 0.10 m/s^2 and the lateral acceleration is 0.09 m/s^2. The length of the vehicle is 9.20 m and its width is 2.50 m.
+At t=-4.0 s, vehicle with id 11.0 is at position (0.00, 0.00) with longitudinal speed 24.80 m/s and lateral speed 0.05 m/s. The longitudinal acceleration is -0.29 m/s^2 and the lateral acceleration is 0.09 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
+At t=-3.0 s, vehicle with id 3.0 is at position (22.26, 3.82) with longitudinal speed 36.05 m/s and lateral speed 0.04 m/s. The longitudinal acceleration is 0.13 m/s^2 and the lateral acceleration is -0.00 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
+At t=-3.0 s, vehicle with id 7.0 is at position (-14.14, 3.51) with longitudinal speed 33.28 m/s and lateral speed 0.15 m/s. The longitudinal acceleration is 0.36 m/s^2 and the lateral acceleration is -0.01 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
+At t=-3.0 s, vehicle with id 10.0 is at position (17.13, -0.10) with longitudinal speed 23.35 m/s and lateral speed 0.07 m/s. The longitudinal acceleration is -0.12 m/s^2 and the lateral acceleration is -0.02 m/s^2. The length of the vehicle is 9.20 m and its width is 2.50 m.
+At t=-3.0 s, vehicle with id 11.0 is at position (0.00, 0.00) with longitudinal speed 24.49 m/s and lateral speed 0.11 m/s. The longitudinal acceleration is -0.33 m/s^2 and the lateral acceleration is -0.02 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
+At t=-2.0 s, vehicle with id 3.0 is at position (34.04, 3.78) with longitudinal speed 36.14 m/s and lateral speed 0.04 m/s. The longitudinal acceleration is 0.08 m/s^2 and the lateral acceleration is -0.01 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
+At t=-2.0 s, vehicle with id 7.0 is at position (-5.03, 3.61) with longitudinal speed 33.63 m/s and lateral speed 0.14 m/s. The longitudinal acceleration is 0.35 m/s^2 and the lateral acceleration is -0.07 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
+At t=-2.0 s, vehicle with id 10.0 is at position (16.06, -0.14) with longitudinal speed 23.17 m/s and lateral speed 0.05 m/s. The longitudinal acceleration is -0.21 m/s^2 and the lateral acceleration is 0.03 m/s^2. The length of the vehicle is 9.20 m and its width is 2.50 m.
+At t=-2.0 s, vehicle with id 11.0 is at position (0.00, 0.00) with longitudinal speed 24.15 m/s and lateral speed -0.01 m/s. The longitudinal acceleration is -0.31 m/s^2 and the lateral acceleration is -0.04 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
+At t=-1.0 s, vehicle with id 3.0 is at position (46.19, 3.85) with longitudinal speed 36.22 m/s and lateral speed 0.02 m/s. The longitudinal acceleration is 0.08 m/s^2 and the lateral acceleration is -0.05 m/s^2. The length of the vehicle is 3.94 m and its width is 1.92 m.
+At t=-1.0 s, vehicle with id 7.0 is at position (4.73, 3.74) with longitudinal speed 33.96 m/s and lateral speed 0.01 m/s. The longitudinal acceleration is 0.30 m/s^2 and the lateral acceleration is -0.10 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
+At t=-1.0 s, vehicle with id 10.0 is at position (15.02, -0.01) with longitudinal speed 22.95 m/s and lateral speed 0.13 m/s. The longitudinal acceleration is -0.22 m/s^2 and the lateral acceleration is -0.01 m/s^2. The length of the vehicle is 9.20 m and its width is 2.50 m.
+At t=-1.0 s, vehicle with id 11.0 is at position (0.00, 0.00) with longitudinal speed 23.90 m/s and lateral speed -0.02 m/s. The longitudinal acceleration is -0.14 m/s^2 and the lateral acceleration is 0.18 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
+At t=0.0 s, vehicle with id 7.0 is at position (15.01, 3.60) with longitudinal speed 34.21 m/s and lateral speed -0.06 m/s. The longitudinal acceleration is 0.20 m/s^2 and the lateral acceleration is -0.04 m/s^2. The length of the vehicle is 4.75 m and its width is 2.02 m.
+At t=0.0 s, vehicle with id 10.0 is at position (14.07, 0.02) with longitudinal speed 22.71 m/s and lateral speed 0.05 m/s. The longitudinal acceleration is -0.26 m/s^2 and the lateral acceleration is -0.12 m/s^2. The length of the vehicle is 9.20 m and its width is 2.50 m.
+At t=0.0 s, vehicle with id 11.0 is at position (0.00, 0.00) with longitudinal speed 23.92 m/s and lateral speed 0.35 m/s. The longitudinal acceleration is 0.22 m/s^2 and the lateral acceleration is 0.46 m/s^2. The length of the vehicle is 4.14 m and its width is 1.92 m.
+
+Task:
+	- Go field by field of the answer template, and fill them out according to their explanation.

@@ -96,11 +96,6 @@ class GroupsLoader:
 
         return self.groups, self.ego_vehicles
 
-
-import pandas as pd
-import json
-from typing import List, Dict, Union
-
 class PromptPopulator:
     """
     Class to populate the prompts.
@@ -218,10 +213,10 @@ class PromptPopulator:
             KeyError: If expected keys are not found in the row.
         """
         info = (
-            f"At t={row['frame']} s, vehicle with id {row['id']} is at position ({row['x']}, {row['y']}) with longitudinal speed "
-            f"{row['xVelocity']} m/s and lateral speed {row['yVelocity']} m/s. The longitudinal acceleration is {row['xAcceleration']} m/s^2 "
-            f"and the lateral acceleration is {row['yAcceleration']} m/s^2. The length of the vehicle is {row['width']} m and its width is "
-            f"{row['height']} m."
+            f"At t={row['frame']} s, vehicle with id {row['id']} is at position ({row['x']:.2f}, {row['y']:.2f}) with longitudinal speed "
+            f"{row['xVelocity']:.2f} m/s and lateral speed {row['yVelocity']:.2f} m/s. The longitudinal acceleration is {row['xAcceleration']:.2f} m/s^2 "
+            f"and the lateral acceleration is {row['yAcceleration']:.2f} m/s^2. The length of the vehicle is {row['width']:.2f} m and its width is "
+            f"{row['height']:.2f} m."
         )
 
         return info
@@ -321,6 +316,49 @@ class PromptPopulator:
                     file.write(f"{message['content']}\n")
         except IOError as e:
             raise IOError(f"Error writing to file {filename}: {e}")
+        
+    def save_top_20_longest_prompts(self, filename: str = 'top_20_longest_prompts.json'):
+        """
+        Generate all prompts, find the 20 longest, and save them to a file.
+
+        Args:
+            filename (str): The name of the file to save the longest prompts.
+        
+        Raises:
+            IOError: If there is an error writing to the file.
+        """
+        all_prompts = []
+
+        for group_index in range(len(self.groups)):
+            try:
+                prompt = self.populate_prompt(group_index)
+                combined_prompt = f"{prompt[0]['content']}\n{prompt[1]['content']}"
+                all_prompts.append({
+                    'group_index': group_index,
+                    'length': len(combined_prompt),
+                    'prompt': prompt
+                })
+            except Exception as e:
+                print(f"Error generating prompt for group {group_index}: {e}")
+
+        # Sort prompts by length in descending order and select the top 20
+        top_20_prompts = sorted(all_prompts, key=lambda x: x['length'], reverse=True)[:20]
+
+        # Extract the relevant information for saving
+        top_20_prompts_content = [
+            {
+                'group_index': item['group_index'],
+                'prompt': item['prompt']
+            }
+            for item in top_20_prompts
+        ]
+
+        # Save the top 20 longest prompts to a JSON file
+        try:
+            with open(filename, 'w') as file:
+                json.dump(top_20_prompts_content, file, indent=4)
+        except IOError as e:
+            raise IOError(f"Error writing to file {filename}: {e}")
 
     def generate_and_save_all_prompts(self, folder: str = None):
         """
@@ -350,11 +388,13 @@ class PromptPopulator:
         except IOError as e:
             raise IOError(f"Error writing to file {filename}: {e}")
 
+
 def main():
     #groups_location = "/Users/lmiguelmartinez/Tesis/datasets/highD/groups_1000_lookback5"
     groups_location = "../data/groups_1000_lookback5"
     #prompts_destination = "/Users/lmiguelmartinez/Tesis/datasets/highD/prompts_1000_lookback5"
     prompts_destination = "../data/prompts_1000_lookback5"
+    generator_destination = "../data/generator_1000_lookback5"
     template_path = "./prompts"
 
     print(f"Loading groups from {groups_location}. \n")
@@ -363,7 +403,9 @@ def main():
         print_blue(f"Generating prompts for dataset {i}...")
         prompt_populator = PromptPopulator(groups_location=groups_location, template_path=template_path, dataset_index=i)
         prompt_populator.generate_and_save_all_prompts(folder=prompts_destination)
+        prompt_populator.save_top_20_longest_prompts(filename=generator_destination)
         print_green(f"Prompts for dataset {i} generated successfully. Saved at {prompts_destination}.\n")
+        print_green(f"Top 20 longest prompts for dataset {i} saved at {generator_destination}.\n")
 
 if __name__ == "__main__":
     main()
