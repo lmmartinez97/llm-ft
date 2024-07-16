@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2024-07-15 17:33:16 by Eclipse SUMO netedit Version v1_20_0+1070-1d6c685c2de
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- VTypes -->
+    <vType id="car" maxSpeed="25.00"/>
+    <vType id="truck" length="12.00" minGap="3.00" maxSpeed="20.00" vClass="truck" accel="1" decel="2.5"/>
+    <!-- Routes -->
+    <route id="l_0" edges="-E4 E3"/>
+    <route id="l_1" edges="-E5 E4"/>
+    <route id="l_2" edges="-E6 E5"/>
+    <route id="l_4" edges="-E3 E6"/>
+    <route id="r_0" edges="-E4 E5"/>
+    <route id="r_1" edges="-E5 E6"/>
+    <route id="r_2" edges="-E6 E3"/>
+    <route id="r_3" edges="-E3 E4"/>
+    <route id="s_0" edges="-E4 E6"/>
+    <route id="s_1" edges="-E5 E3"/>
+    <route id="s_2" edges="-E6 E4"/>
+    <route id="s_3" edges="-E3 E5"/>
+    <!-- Vehicles, persons and containers (sorted by depart) -->
+    <flow id="f_0" type="car" begin="0.00" route="r_1" end="3600.00" period="exp(0.035)"/>
+    <flow id="f_1" type="car" begin="0.00" route="r_2" end="3600.00" period="exp(0.035)"/>
+    <flow id="f_10" type="car" begin="0.00" route="l_4" end="3600.00" period="exp(0.005)"/>
+    <flow id="f_11" type="truck" begin="0.00" route="r_0" end="3600.00" period="exp(0.007)"/>
+    <flow id="f_12" type="truck" begin="0.00" route="r_1" end="3600.00" period="exp(0.007)"/>
+    <flow id="f_13" type="truck" begin="0.00" route="r_2" end="3600.00" period="exp(0.007)"/>
+    <flow id="f_14" type="truck" begin="0.00" route="r_3" end="3600.00" period="exp(0.007)"/>
+    <flow id="f_15" type="truck" begin="0.00" route="s_0" end="3600.00" period="exp(0.010)"/>
+    <flow id="f_16" type="truck" begin="0.00" route="s_1" end="3600.00" period="exp(0.010)"/>
+    <flow id="f_17" type="truck" begin="0.00" route="s_2" end="3600.00" period="exp(0.010)"/>
+    <flow id="f_18" type="truck" begin="0.00" route="s_3" end="3600.00" period="exp(0.010)"/>
+    <flow id="f_19" type="truck" begin="0.00" route="l_0" end="3600.00" period="exp(0.001)"/>
+    <flow id="f_2" type="car" begin="0.00" route="r_3" end="3600.00" period="exp(0.035)"/>
+    <flow id="f_20" type="truck" begin="0.00" route="l_1" end="3600.00" period="exp(0.001)"/>
+    <flow id="f_21" type="truck" begin="0.00" route="l_2" end="3600.00" period="exp(0.001)"/>
+    <flow id="f_22" type="truck" begin="0.00" route="l_4" end="3600.00" period="exp(0.001)"/>
+    <flow id="f_3" type="car" begin="0.00" route="s_0" end="3600.00" period="exp(0.065)"/>
+    <flow id="f_4" type="car" begin="0.00" route="s_1" end="3600.00" period="exp(0.065)"/>
+    <flow id="f_5" type="car" begin="0.00" route="s_2" end="3600.00" period="exp(0.065)"/>
+    <flow id="f_6" type="car" begin="0.00" route="s_3" end="3600.00" period="exp(0.065)"/>
+    <flow id="f_7" type="car" begin="0.00" route="l_0" end="3600.00" period="exp(0.005)"/>
+    <flow id="f_8" type="car" begin="0.00" route="l_1" end="3600.00" period="exp(0.005)"/>
+    <flow id="f_9" type="car" begin="0.00" route="l_2" end="3600.00" period="exp(0.005)"/>
+    <flow id="r_0" type="car" begin="0.00" route="r_0" end="3600.00" period="exp(0.035)"/>
+</routes>
