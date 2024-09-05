@@ -25,7 +25,7 @@ from termcolor import cprint
 from time import time
 
 # Local imports
-from read_csv import read_meta_info
+from prompt_factory.group_extraction.read_csv import read_meta_info
 
 sns.set_theme('notebook')
 sns.set_style("whitegrid")
