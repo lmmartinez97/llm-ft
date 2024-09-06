@@ -1,4 +1,4 @@
-name: prompts
+name: prompt_factory
 channels:
   - conda-forge
   - defaults
