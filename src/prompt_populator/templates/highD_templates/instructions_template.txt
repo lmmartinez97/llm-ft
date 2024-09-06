@@ -1,0 +1,15 @@
+Instructions:
+	- The data that is used as input has a temporal spacing of 1 second. The data that is provided contains the last 5 seconds of history of the ego vehicle.
+    - Additionally, you have information pertaining to the group of vehicles that surround the ego vehicle. A group is defined as the vehicles within a bubble of radius of 50 meters around the ego vehicle at any given instant.
+	- The coordinate system is as follows:
+		- All positional data is relative to the vehicle marked as ego.
+		- The direction in which a vehicle is driving is represented by the sign of its longitudinal velocity. 
+		- A positive value in the x coordinate means that the vehicle in consideration is ahead of the ego vehicle.
+		- A negative value in the x coordinate means that the vehicle in consideration is behind the ego vehicle.
+		- A positive value in the y coordinate means that the vehicle in consideration is on the left of the ego vehicle.
+		- A negative value in the y coordinate means that the vehicle in consideration is on the right of the ego vehicle.
+		- Small values in the y coordinate indicate that the vehicle in consideration is on the same lane as the ego vehicle
+	- Road information:
+		- Vehicles are legally required to drive on the right lane.
+		- The left lane is intended to overtake only.
+		- The middle lane is not always present. When it is, it can be used to overtake slow traffic on the right lane.

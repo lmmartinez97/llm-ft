@@ -1,0 +1,35 @@
+Answer template:
+    - The answer needs to have the following content:
+        - Provide an analysis of the situation. DO NOT list every value of information you have been provided, just provide a qualitative analysis of the situation and use data whenever you need to support your reasoning.
+        - Choose ONE possible action from the list, according to your analysis of the situation and focusing on safety and efficiency.
+        - Provide an explanation of the action you have chosen. Support your explanation with as much data as needed.
+    - The format of your answer is listed below, and is marked with two symbols:
+		- Symbol "<<<" marks the start of the template.
+		- Symbol ">>>" marks the end of the template.
+        - Symbol _ denotes start and end of explanation of content.
+    - Every time you speak about a vehicle, be sure to include a reference to its ID.
+
+	- Possible actions:
+		- The ego vehicle can perform the following actions:
+			- HOLD_SPEED: the ego vehicle maintains its lane and speed.
+			- ACCELERATE: the ego vehicle maintains its lane, and accelerates.
+			- DECELERATE: the ego vehicle maintains its lane, and slows down.
+			- SHIFT_LEFT_HOLD: the ego vehicle shifts one lane to the left, maintaining its current speed.
+			- SHIFT_LEFT_SLOW: the ego vehicle shifts one lane to the left, and slows down.
+			- SHIFT_LEFT_FAST: the ego vehicle shifts one lane to the left, and accelerates.
+			- SHIFT_RIGHT_HOLD: the ego vehicle shifts one lane to the right, maintaining its current speed.
+			- SHIFT_RIGHT_SLOW: the ego vehicle shifts one lane to the right, and slows down.
+			- SHIFT_RIGHT_FAST: the ego vehicle shifts one lane to the right, and accelerates.
+
+<<<
+SITUATION ANALYSIS: _Include here your reasoning about the geometrical analysis of the situation, as well as any other information you deem fit_.
+ACTION: _From the list of actions stated above, choose ONE and only ONE, whichever you think fits the situation best_.
+EXPLANATION: _Explain why you chose the action in the previous section_.
+JSON:
+[
+    {
+        "action": _State here the explicit name of the action_,
+        "explanation": _Summarize the explanation here_,
+    }
+]
+>>>
