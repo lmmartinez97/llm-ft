@@ -25,7 +25,7 @@ from termcolor import cprint
 from time import time
 
 # Local imports
-from prompt_factory.group_extraction.read_csv import read_meta_info
+from read_csv import read_meta_info
 
 sns.set_theme('notebook')
 sns.set_style("whitegrid")
@@ -55,7 +55,7 @@ def print_blue(*args):
         cprint(arg, "blue", end=' ')  # Using end=' ' to print all arguments on the same line
     print()
 
-class GroupExtractor:
+class HighDGroupExtractor:
     """
     A class that extracts vehicle groups from a highD dataset recording
     
@@ -391,7 +391,6 @@ class GroupExtractor:
         for lane_marking in lane_markings:
             ax.plot([x_min, x_max], [lane_marking, lane_marking], color='black', linestyle='--', linewidth=1)
 
-
         # Iterate over each row in the group
         for _, row in group.iterrows():
             # Determine the color based on the frame number
@@ -460,8 +459,6 @@ class GroupExtractor:
         # Determine plot limits
         x_min, x_max = group['x'].min(), group['x'].max()
         y_min, y_max = group['y'].min(), group['y'].max()
-
-        display(group)
 
         # Create a new figure for the animation with a reasonable size
         fig, ax = plt.subplots(figsize=(10, 8), dpi=100)
@@ -565,7 +562,7 @@ def main():
         print_red(f"Processing dataset {i}")
 
         start = time()
-        scene_data = GroupExtractor(dataset_location=dataset_location, dataset_index=i)
+        scene_data = HighDGroupExtractor(dataset_location=dataset_location, dataset_index=i)
         end = time()
         timing_df.loc[i, "initialization"] = end - start
         print_blue(f"Initializing scene data took {end - start} seconds")
