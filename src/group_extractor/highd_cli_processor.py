@@ -51,7 +51,7 @@ def process_file(dataset_location: str, dataset_index: int, sampling_period: flo
             elif plot_choice == "animate":
                 # Animate a random group
                 print(f"Animating group {random_group}...")
-                extractor.animate_groups(group_num=random_group, save=False)
+                extractor.animate_groups(group_num=random_group, dense=True)
 
 def process_dataset(dataset_location: str, sampling_period: float, lookback_window: float, save_path: str) -> None:
     """
@@ -130,9 +130,9 @@ def main() -> None:
                 print("Exiting the program.")
                 exit(0)
             try:
-                lookback_window = float(lookback_window_input)
+                lookback_window = int(lookback_window_input)
                 if lookback_window <= 0:
-                    raise ValueError
+                    raise ValueError("Invalid input. Please enter a positive integer number for the lookback window.")
                 break
             except ValueError:
                 print("Invalid input. Please enter a valid positive number for the lookback window.")

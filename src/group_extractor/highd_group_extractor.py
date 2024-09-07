@@ -20,6 +20,7 @@ from typing import List, Dict, Union
 from copy import deepcopy
 from matplotlib.patches import Rectangle, Ellipse
 from matplotlib.animation import FuncAnimation, PillowWriter
+from matplotlib.widgets import Button
 from rich import print
 from termcolor import cprint
 from time import time
@@ -97,10 +98,10 @@ class HighDGroupExtractor:
         
         # retrieve raw data
         self.dataset_index  = dataset_index
-        self.dataset_location = dataset_location
-        self.df_location = dataset_location + str(dataset_index).zfill(2) + "_tracks.csv"
-        self.static_info_location = dataset_location + str(dataset_index).zfill(2) + "_tracksMeta.csv"
-        self.video_info_location = dataset_location + str(dataset_index).zfill(2) + "_recordingMeta.csv"
+        self.dataset_location = dataset_location + "/"
+        self.df_location = self.dataset_location + str(dataset_index).zfill(2) + "_tracks.csv"
+        self.static_info_location = self.dataset_location + str(dataset_index).zfill(2) + "_tracksMeta.csv"
+        self.video_info_location = self.dataset_location + str(dataset_index).zfill(2) + "_recordingMeta.csv"
 
         self.data = pd.read_csv(self.df_location)
         self.static_info = pd.read_csv(self.static_info_location)
@@ -128,7 +129,7 @@ class HighDGroupExtractor:
 
         self.bg_image = None
 
-        self.get_background_img(dataset_location + str(dataset_index).zfill(2) + "_highway.png")
+        self.get_background_img(self.dataset_location + str(dataset_index).zfill(2) + "_highway.png")
 
     def get_background_img(self, path):
         '''
@@ -423,47 +424,48 @@ class HighDGroupExtractor:
         # Show the plot
         plt.show()
 
-    def animate_groups(self, group_num: int = 0, interval: int = 100, dense: bool = False, save: bool = False, save_path: str = None):
+    def animate_groups(self, group_num: int = 0, interval: int = 100, dense: bool = False, save_path: str = None):
         """
-        Creates an animation of the vehicles in a specified group, showing their positions and ids over time.
+        Creates an animation of the vehicles in a specified group, with button controls for playback.
 
         Args:
             group_num (int): The index of the group to animate. Default is 0.
+            interval (int): The time interval between frames in milliseconds. Default is 100.
+            dense (bool): Whether to show all frames or frames separated by the sampling period of the extractor.
             save (bool): Whether to save the animation as a video. Default is False.
             save_path (str): The path to save the animation video. Required if save is True.
-            interval (int): The time interval between frames in milliseconds. Default is 100.
-            dense (bool): Whether to show all frames or frames separated with the sampling period of the extractor. Default is False.
         """
-        # Check if groups attribute exists
+        # Check if groups exist
         if not hasattr(self, 'groups') or not self.groups:
-            raise RuntimeError("No groups to plot. Please run the group creation pipeline first.")
-
+            raise RuntimeError("No groups to animate. Please run the group creation pipeline first.")
+        
         # Ensure the group number is within range
         if group_num < 0 or group_num >= len(self.groups):
             raise ValueError(f"Group number {group_num} is out of range.")
-
+        
         # Get the group to animate
         if not dense:
             group = self.groups[group_num]
-        else: #get dense data for the group by fitering the original dataframe
-            min_frame = self.groups[group_num]['frame'].min() #get the start frame of animation in new framing sequence
-            start_frame = self.framing_dict[min_frame] #convert it to old framing sequence
-            end_frame = start_frame + self.frame_spacing*self.window_size #get the end frame of animation in old framing sequence
-            group = self.raw_data[(self.raw_data['frame'] >= start_frame) & (self.raw_data['frame'] <= end_frame)] #get the data for the frames between start and end frame
-            group = group[group['id'].isin(self.groups[group_num]['id'])] #filter the data to include only the vehicles in the group
+        else:
+            min_frame = self.groups[group_num]['frame'].min()
+            start_frame = self.framing_dict[min_frame]
+            end_frame = start_frame + self.frame_spacing * self.window_size
+            group = self.raw_data[(self.raw_data['frame'] >= start_frame) & (self.raw_data['frame'] <= end_frame)]
+            group = group[group['id'].isin(self.groups[group_num]['id'])]
             group = group.astype({'frame': 'int16', 'id': 'int32'})
-            interval = self.frame_length #set interval to 40ms for dense data
-        # Get the maximum frame number for this group
+            interval = self.frame_length  # Use 40ms intervals for dense data
+        
         max_frame = group['frame'].max()
         min_frame = group['frame'].min()
-        # Determine plot limits
-        x_min, x_max = group['x'].min(), group['x'].max()
-        y_min, y_max = group['y'].min(), group['y'].max()
 
-        # Create a new figure for the animation with a reasonable size
+        # Create a new figure for the animation
         fig, ax = plt.subplots(figsize=(10, 8), dpi=100)
         ax.set_aspect('equal')
-        ax.set_xlim(x_min - 10, x_max + 10)  # Adding some padding
+
+        # Set plot limits
+        x_min, x_max = group['x'].min(), group['x'].max()
+        y_min, y_max = group['y'].min(), group['y'].max()
+        ax.set_xlim(x_min - 10, x_max + 10)
         ax.set_ylim(y_min - 10, y_max + 10)
 
         # Set labels and title
@@ -471,77 +473,113 @@ class HighDGroupExtractor:
         ax.set_ylabel('Y Position')
         ax.set_title(f'Group {group_num} Vehicle Positions')
 
-        #Axis orientation - vehicles moving left or right
-        if group['xVelocity'].mean() > 0:
-            ax.invert_yaxis()
-            lane_markings = self.video_info["lowerLaneMarkings"]  #correct lane marking position for better visualization
-        else:
-            ax.invert_xaxis()
-            lane_markings = self.video_info["upperLaneMarkings"]  #correct lane marking position for better visualization
-
         # Draw lane markings
+        lane_markings = self.video_info["lowerLaneMarkings"] if group['xVelocity'].mean() > 0 else self.video_info["upperLaneMarkings"]
         for lane_marking in lane_markings:
             ax.plot([x_min, x_max], [lane_marking, lane_marking], color='black', linestyle='--', linewidth=1)
 
-        # Initialize a list to hold the rectangle patches and text annotations
+        # Initialize patch and text lists
         patches = []
-
-        ## Print parameters
-        print("Animating vehicles with the following parameters:")
-        print_green(f"Group number: {group_num}")
-        print_green(f"Interval: {interval} ms")
-        print_green(f"Dense: {dense}")
-        print_green(f"Min and max frame: {min_frame}, {max_frame}")
-        print_green(f"Number of frames: {max_frame - min_frame + 1}")
 
         def init():
             """Initialize the plot with empty patches and text annotations."""
             for patch in patches:
                 patch.remove()
             patches.clear()
-
             return patches
 
         def update(frame):
             """Update the plot for each frame of the animation."""
-            init()  # Clear previous patches and text annotations
-            frame_data = group[group['frame'] == frame+min_frame] #get the data for the current frame
+            init()
+            frame_data = group[group['frame'] == frame + min_frame]
             for _, row in frame_data.iterrows():
-                # Determine the color based on the frame number
                 color_intensity = row['frame'] / max_frame
-                if row['id'] == self.ego_vehicles[group_num]:
-                    color = (0, color_intensity, 0, 0.5)  # Shades of green for the ego vehicle
-                else:
-                    color = (0, 0, color_intensity, 0.5)  # Shades of blue for other vehicles
-
-                # Create a rectangle centered at the vehicle's position
-                rect = Rectangle((row['x'] - row['width'] / 2, row['y'] - row['height'] / 2),
-                                row['width'], row['height'],
-                                linewidth=1, edgecolor='black', facecolor=color)
+                color = (0, color_intensity, 0, 0.5) if row['id'] == self.ego_vehicles[group_num] else (0, 0, color_intensity, 0.5)
+                rect = Rectangle((row['x'] - row['width'] / 2, row['y'] - row['height'] / 2), row['width'], row['height'], linewidth=1, edgecolor='black', facecolor=color)
                 ax.add_patch(rect)
-                patches.append(rect)
-
-                # Add text annotations for the vehicle's ID and frame number
                 id_text = ax.text(row['x'], row['y'] + row['height'] / 2 + 1, 'id: ' + str(int(row['id'])), fontsize=10, ha='center', va='center', color='red')
-                #frame_text = ax.text(row['x'], row['y'] - row['height'] / 2 - 0.5, 'frame: ' + str(int(row['frame'])), fontsize=7, ha='left', va='center', color='red')
-                #patches.extend([id_text, frame_text])
-                patches.append(id_text)
+                patches.extend([rect, id_text])
 
             return patches
 
-        # Create the animation
-        anim = FuncAnimation(fig, update, frames=range(max_frame - min_frame + 1), init_func=init, blit=True, repeat=False, interval = interval)
+        # Create the animation object
+        anim = FuncAnimation(fig, update, frames=range(max_frame - min_frame + 1), init_func=init, blit=True, repeat=True, interval=interval)
 
-        # Save the animation if requested
-        if save:
-            if save_path is None:
-                print("No save path provided. Animation will not be saved.")
+        # Set initial playback speed
+        speed = interval
+        is_paused = False
+
+        # Create button axes for Play/Pause, Speed Up, Slow Down, Restart, and Exit
+        axplay = plt.axes([0.7, 0.02, 0.1, 0.075])  # Play/Pause button
+        axslow = plt.axes([0.81, 0.02, 0.1, 0.075])  # Slow down button
+        axfast = plt.axes([0.59, 0.02, 0.1, 0.075])  # Speed up button
+        axrestart = plt.axes([0.48, 0.02, 0.1, 0.075])  # Restart button
+        axexit = plt.axes([0.37, 0.02, 0.1, 0.075])  # Exit button
+
+        bplay = Button(axplay, 'Play/Pause')
+        bslow = Button(axslow, 'Slow Down')
+        bfast = Button(axfast, 'Speed Up')
+        brestart = Button(axrestart, 'Restart')
+        bexit = Button(axexit, 'Exit')
+
+        def toggle_play(event):
+            """Toggle play/pause the animation."""
+            nonlocal is_paused
+            if is_paused:
+                anim.event_source.start()
+                is_paused = False
             else:
-                anim.save(save_path, writer=PillowWriter(fps=1000/interval))
-                print(f"Animation saved to {save_path}")
+                anim.event_source.stop()
+                is_paused = True
 
-        # Display the animation
+        def speed_up(event):
+            """Speed up the animation by decreasing the interval."""
+            nonlocal speed
+            speed = max(10, speed - 10)
+            anim.event_source.interval = speed
+            print(f"Speed increased. Interval: {speed} ms")
+        
+        def restart(event):
+            """Restart the animation from the beginning."""
+            nonlocal anim, is_paused
+            anim.event_source.stop()  # Stop the current animation
+            anim.frame_seq = anim.new_frame_seq()  # Reset the frame sequence
+
+            # Create a new animation object to restart it
+            anim = FuncAnimation(fig, update, frames=range(max_frame - min_frame + 1), init_func=init, blit=True, repeat=True, interval=speed)
+            is_paused = False
+            print("Animation restarted.")
+
+        def slow_down(event):
+            """Slow down the animation by increasing the interval."""
+            nonlocal speed
+            speed += 10
+            anim.event_source.interval = speed
+            print(f"Speed decreased. Interval: {speed} ms")
+
+        def exit_animation(event):
+            """Exit the animation and close the plot window."""
+            plt.close(fig)
+            print("Exiting animation.")
+
+        # Connect buttons to their respective functions
+        bplay.on_clicked(toggle_play)
+        bslow.on_clicked(slow_down)
+        bfast.on_clicked(speed_up)
+        brestart.on_clicked(restart)
+        bexit.on_clicked(exit_animation)
+
+        # Show the animation with buttons
         plt.show()
+
+        # Ask if the user wants to save the animation
+        save_option = input("Do you want to save the animation? (yes/no): ").strip().lower()
+        if save_option == 'yes':
+            if save_path is None:
+                save_path = input("Enter the path to save the animation: ").strip()
+            anim.save(save_path, writer=PillowWriter(fps=1000/speed))
+            print(f"Animation saved to {save_path}")
+
 
 def main():
     lookback = 4
