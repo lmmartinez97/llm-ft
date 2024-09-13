@@ -322,7 +322,7 @@ class HighDGroupExtractor:
             save_path (str): The path to save the json file.
         """
         if save_path is None:
-            raise ValueError("Please provide a save path for the CSV file.")
+            raise ValueError("Please provide a save path for the JSON file.")
         
         if not self.groups:
             raise RuntimeError("No groups to save. Please run the group creation pipeline first.")
