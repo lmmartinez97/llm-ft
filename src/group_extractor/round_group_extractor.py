@@ -23,7 +23,7 @@ from termcolor import cprint
 from time import time
 
 # Local imports
-from loading import csv_to_dict
+from utils.loading import csv_to_dict
 
 sns.set_theme('notebook')
 sns.set_style("whitegrid")
@@ -617,7 +617,7 @@ def main():
 
     timing_df = pd.DataFrame(columns=["initialization", "filtering", "windowing", "ego_vehicles", "grouping", "saving", "total"])
 
-    for i in range(1, 61):
+    for i in range(1, 23):
         print_bl()
         print_red(f"Processing dataset {i}")
 
