@@ -160,7 +160,7 @@ cython_debug/
 #.idea/
 
 # .DS_Store files
-.DS_Store
+*.DS_Store
 
 # ignore everything on ./dev/test_save
 dev/test_save/*
