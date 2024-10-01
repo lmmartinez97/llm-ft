@@ -1,0 +1,2 @@
+Task:
+	- Go field by field of the answer template, and fill them out according to their explanation.
