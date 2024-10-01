@@ -96,7 +96,7 @@ class GroupsLoader:
 
         return self.groups, self.ego_vehicles
 
-class PromptPopulator:
+class HighDPromptPopulator:
     """
     Class to populate the prompts.
 
