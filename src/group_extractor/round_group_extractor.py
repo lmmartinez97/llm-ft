@@ -66,14 +66,14 @@ class RounDGroupExtractor:
     Attributes:
         dataset_location (str): Path to the directory where the dataset is stored.
         dataset_index (int): Index of the recording to be processed (must be between 1 and 22).
-        data (pd.DataFrame): Raw vehicle trajectory data from the recording.
+        data (pd.DataFrame): Filtered vehicle trajectory data from the recording.
+        raw_data (pd.DataFrame): Original unfiltered vehicle trajectory data.
         static_info (pd.DataFrame): Static information about the vehicles.
         video_info (dict): Metadata about the video recording, including frame rate and scaling factor.
         sampling_period (int): Time interval between frames to include in the analysis.
         frame_spacing (int): Number of frames between each sampled frame.
         frame_length (float): Duration of each frame in milliseconds.
-        framing_dict (Dict[int, int]): Dictionary mapping new frame numbers to original frame numbers.
-        raw_frames (pd.Series): Original frame numbers before filtering.
+        framing_dict (Dict[int, int]): Dictionary mapping filtered frame numbers to original frame numbers.
         bg_image (np.ndarray): Background image for plotting and analysis.
         bg_image_scaling_factor (float): Scaling factor for converting pixel coordinates to meters.
         center_x_px (int): X-coordinate of the roundabout center in pixels.
@@ -91,9 +91,10 @@ class RounDGroupExtractor:
         rotation_angle (float): Angle of rotation for aligning the roundabout arms with the x-axis.
         entry_points_m_new (Dict[str, Tuple[float, float]]): Translated and rotated entry points in meters.
         exit_points_m_new (Dict[str, Tuple[float, float]]): Translated and rotated exit points in meters.
-        ego_vehicles (Dict[int, Tuple[int, int, str, str]]): Dictionary storing the ego vehicles and their
-            corresponding entry/exit frames and entry/exit points.
-        
+        ego_vehicles (Dict[int, Tuple[int, int, str, str]]): Dictionary storing ego vehicles with entry/exit frames and points.
+        groups (List[pd.DataFrame]): List of DataFrames representing vehicle groups in time windows.
+        ego_vehicle_indices (List[int]): List of ego vehicle IDs for each group.
+
     Methods:
         get_background_img(path): Loads the background image for plotting and geometry calculations.
         get_roundabout_edges(): Detects the roundabout's center and the radii of the inner and outer edges.
@@ -106,6 +107,9 @@ class RounDGroupExtractor:
             and logs their entry/exit frames and entry/exit points.
         get_groups(): Forms vehicle groups based on the presence of vehicles between the entry and exit frames.
         save_groups(save_path): Saves the vehicle groups and ego vehicles to separate JSON files.
+        print_info(): Prints debugging information about the dataset, frames, and geometry.
+        plot_groups(group_num, save, save_path): Plots vehicle groups on the roundabout image.
+        animate_groups(group_num, interval, dense, save_path): Creates an animation of the vehicle groups.
     """
 
     def __init__(self, dataset_location: str = None, dataset_index: int = None) -> None:
@@ -124,6 +128,7 @@ class RounDGroupExtractor:
         Raises:
             ValueError: If no dataset location is provided or if the dataset index is outside the valid range.
         """
+
         ### Error handling
         if dataset_location is None:
             raise ValueError("Please provide a dataset location.")
@@ -236,11 +241,18 @@ class RounDGroupExtractor:
         """
         Calculates the entry and exit points of the roundabout based on homography transformations.
 
+        Args:
+            None
         Returns:
             Tuple[Dict[str, Tuple[int, int]], Dict[str, Tuple[int, int]]]: Two dictionaries containing the 
             entry and exit points for the roundabout, where each key is the name of an entry/exit point 
             ('north', 'south', 'east', 'west') and each value is a tuple of pixel coordinates.
+        Raises:
+            FileNotFoundError: If the reference image is not found at the specified path.
         """
+        ### Error handling
+        if not os.path.exists(self.reference_image_path):
+            raise FileNotFoundError(f"Reference image not found at {self.reference_image_path}.")
         reference_image = cv2.imread(self.reference_image_path)
         current_image = cv2.imread(self.image_path)
 
@@ -291,8 +303,7 @@ class RounDGroupExtractor:
     
     def filter_data(self, sampling_period: int = 1000) -> pd.DataFrame:
         """
-        Filters the dataset based on a specified sampling period.
-        Translates and rotates the data to align the roundabout arms with the x-axis.
+        Filters the dataset based on a specified sampling period and sets up coordinate transformations.
 
         Args:
             sampling_period (int): The time interval between frames to include, in milliseconds.
@@ -335,6 +346,13 @@ class RounDGroupExtractor:
         Translates the data to the center of the roundabout and performs a rotation to align the arms of the roundabout with the x-axis.
 
         Adds new columns to the dataframe for the translated and rotated coordinates. Updates the entry and exit points as well.
+
+        Args:
+            None
+        Returns:
+            None
+        Raises:
+            ValueError: If the center or framing_dict attributes are not set.
         """
         ### Error handling
         if not hasattr(self, "center_x_m"):
@@ -366,7 +384,8 @@ class RounDGroupExtractor:
 
     def get_ego_vehicles(self, entry_radius: Union[float, int] = 5.0, exit_radius: Union[float, int] = 5.0, min_gap: int = 10) -> None:
         """
-        Identifies vehicles entering and exiting the roundabout, recording their entry/exit frames and points.
+        Identifies vehicles entering the roundabout, and records the first frame they appear and the entry frame and point. 
+        It also records the exit frame and point when the vehicle exits the roundabout.
 
         This method calculates the Euclidean distance between each vehicle's position and all entry and exit points 
         of the roundabout. A vehicle is considered an ego vehicle if it enters and exits the roundabout:
@@ -383,11 +402,10 @@ class RounDGroupExtractor:
         Returns:
             None: Updates self.ego_vehicles (Dict[int, Tuple[int, int, str, str]]) internally, where:
                 - The keys are vehicle IDs (int).
-                - The values are tuples of the form (first_frame, last_frame, entry_point, exit_point):
-                    - first_frame (int): Frame when the vehicle was first detected near the entry point.
-                    - last_frame (int): Frame when the vehicle was last detected near the exit point.
+                - The values are tuples of the form (first_frame, entry_frame, exit_frame, entry_point, exit_point):
+                    - first_frame (int): Frame when the vehicle was first detected in the dataset.
+                    - entry_frame (int): Frame when the vehicle was first detected near the entry point.
                     - entry_point (str): The name of the entry point the vehicle used ('north', 'south', 'east', 'west').
-                    - exit_point (str): The name of the exit point the vehicle used ('north', 'south', 'east', 'west').
 
         Raises:
             ValueError: If entry_points_m_new or framing_dict are not set, which are prerequisites for this method.
@@ -401,7 +419,6 @@ class RounDGroupExtractor:
         exit_radius = float(exit_radius)
         self.entry_radius_px = int(entry_radius / self.bg_image_scaling_factor)
         self.exit_radius_px = int(exit_radius / self.bg_image_scaling_factor)
-        
         # Extract necessary columns as numpy arrays for vectorized computation
         vehicle_ids = self.data['trackId'].values
         frames = self.data['frame'].values
@@ -435,52 +452,34 @@ class RounDGroupExtractor:
                     # Check if the vehicle is already in the roundabout using the in_roundabout method
                     if not self.in_roundabout(*position):
                         # Initialize the ego vehicle with the first frame and entry point
-                        self.ego_vehicles[int(vehicle_id)] = [int(frame), None, entry_name, None]
+                        self.ego_vehicles[int(vehicle_id)] = [None, int(frame), entry_name]            
 
-        # Loop over the exit points to track when the vehicle exits
-        for exit_name, exit_point in self.exit_points_m_new.items():
-            exit_point_array = np.array(exit_point)
-            
-            # Calculate the Euclidean distance between each vehicle and the current exit point
-            distances = np.linalg.norm(vehicle_positions - exit_point_array, axis=1)
-            
-            # Create a mask for vehicles within the exit radius
-            within_exit_radius_mask = distances < exit_radius
-            
-            # Filter vehicle IDs, frames, and positions that are within the exit radius
-            candidate_vehicle_ids = vehicle_ids[within_exit_radius_mask]
-            candidate_frames = frames[within_exit_radius_mask]
-            candidate_positions = vehicle_positions[within_exit_radius_mask]
-            
-            # Update vehicles with their exit point and last frame, only if they have left the roundabout and min_gap is satisfied
-            for vehicle_id, frame, position in zip(candidate_vehicle_ids, candidate_frames, candidate_positions):
-                if vehicle_id in self.ego_vehicles and not self.in_roundabout(*position) and frame - self.ego_vehicles[int(vehicle_id)][0] > min_gap:
-                    # Update the ego vehicle with the last frame and exit point
-                    self.ego_vehicles[int(vehicle_id)][1] = int(frame)  # Update last frame
-                    self.ego_vehicles[int(vehicle_id)][3] = exit_name   # Update exit point
+        # Complete the ego vehicles information by including the first frame in which the ego vehicle appears
+        for vehicle_id in self.ego_vehicles:
+            # Get the first frame when the vehicle was detected
+            first_frame = self.data.loc[(self.data['trackId'] == vehicle_id) & (self.data['frame'] >= 0), 'frame'].min()
+            self.ego_vehicles[vehicle_id][0] = int(first_frame)
 
-        # Sort the entry vehicles by their entry frame
-        self.ego_vehicles = dict(sorted(self.ego_vehicles.items(), key=lambda item: item[1][0]))
+        # Sort the entry vehicles by their first frame
+        self.ego_vehicles = dict(sorted(self.ego_vehicles.items(), key=lambda x: x[1][0]))
         print("Number of ego vehicles detected:", len(self.ego_vehicles))
 
     def get_groups(self) -> None:
         """
-        Forms vehicle groups based on the presence of vehicles between the entry and exit frames of each ego vehicle.
+        Forms vehicle groups based on the presence of vehicles between the first frame in which the ego vehicle is recorded
+        and the frame in which it enters the roundabout.
 
-        For each ego vehicle, this method collects every vehicle present in the frames between its entry and exit frames,
-        including the ego vehicle itself. The method returns a list of dataframes, where each dataframe represents a group
-        of vehicles present in the specified time window for a particular ego vehicle.
+        Args:
+            None
+        Returns:
+            None: Updates self.groups and self.ego_vehicle_indices internally.
         """
         self.groups = []
         self.ego_vehicle_indices = []
-        skip_count = 0
         # Iterate through the ego vehicles
-        for ego_id, (entry_frame, exit_frame, entry_point, exit_point) in self.ego_vehicles.items():
-            #Skip incomplete groups
-            if exit_frame is None:
-                continue
-            # Filter the data to include all vehicles present between entry_frame and exit_frame
-            group_df = self.data[(self.data['frame'] >= entry_frame) & (self.data['frame'] <= exit_frame)].copy()
+        for ego_id, (first_frame, entry_frame, _) in self.ego_vehicles.items():
+            # Filter the data to include all vehicles present between first frame and entry frame that are already in the roundabout
+            group_df = self.data[(self.data['frame'] >= first_frame) & (self.data['frame'] <= entry_frame)].copy()
             self.groups.append(group_df)
             self.ego_vehicle_indices.append(ego_id)
 
@@ -597,7 +596,6 @@ class RounDGroupExtractor:
         plt.title("Roundabout Geometry with Entry (Red) and Exit (Blue) Points")
         plt.axis('off')
         plt.show()
-
 
 def main():
     if os.path.exists("/Users/lmiguelmartinez/Tesis/datasets/rounD/data/"):
