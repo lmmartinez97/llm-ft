@@ -1,0 +1,35 @@
+Answer template:
+    - The answer needs to have the following content:
+        - Provide an analysis of the situation. DO NOT list every value of information you have been provided, just provide a qualitative analysis of the situation and use data whenever you need to support your reasoning.
+        - Choose an action pair:
+		- The first action, chosen from LIST 1, pertains to the speed of the ego vehicle.
+		- The second action, chosen from LIST 2, pertains to the roundabout lane that the ego vehicle will choose.
+        - Provide an explanation of the action pair you have chosen. Support your explanation with as much data as needed.
+    - The format of your answer is listed below, and is marked with two symbols:
+		- Symbol "<<<" marks the start of the template.
+		- Symbol ">>>" marks the end of the template.
+        - Symbol _ denotes start and end of explanation of content.
+    - Every time you speak about a vehicle, be sure to include a reference to its ID.
+	- Possible actions:
+		- LIST 1:
+			- STOP_FAST: The ego vehicle performs an emergency stop.
+			- STOP : The ego vehicle performs a stopping maneuver.
+			- DECREASE_SPEED: The ego vehicle reduces its speed progressively.
+			- MAINTAIN_SPEED: The ego vehicle maintains its speed.
+			- INCREASE_SPEED: The ego vehicle increases its speed.
+		- LIST 2:
+			- INNER_LANE: The ego vehicle uses the inner lane to traverse the roundabout.
+			- OUTER_LANE: The ego vehicle uses the outer lane to traverse the roundabout.
+
+<<<
+SITUATION ANALYSIS: _Include here your reasoning about the geometrical analysis of the situation, as well as any other information you deem fit_.
+ACTION: _From the list of actions stated above, choose ONE and only ONE, whichever you think fits the situation best_.
+EXPLANATION: _Explain why you chose the action in the previous section_.
+JSON:
+[
+    {
+        "action": _State here the explicit name of both actions in the action pair_,
+        "explanation": _Summarize the explanation here_,
+    }
+]
+>>>

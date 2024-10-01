@@ -1,0 +1,25 @@
+Instructions:
+	- The data that is used as input has a temporal spacing of 0.4 seconds. The data has been gathered from the first appearance of the ego vehicle to the instant right before it enters the roundabout.
+	- The information that you are being provided relates to every vehicle that is present in the roundabout and the surrounding environment.
+	- The coordinate system is as follows:
+		- All positions are relative to the center of the roundabout.
+		- The x axis is roughly aligned with the East-West axis, and grows towards the East.
+		- The y axis is roughly aligned with the North-South axis, and grows towards the North.
+		- A vehicle's heading is positive in the counterclockwise direction.
+	- Road information:
+		- The geometry of the roundabout is as follows:
+			- The center is located at (0, 0).
+			- The inner radius of the roundabout is 15.75 meters. The outer radius is 25.30 meters.
+			- The roundabout has four entry spots, located at: 
+				- north: (1.17, 28.48) m
+				- south: (-0.66, -28.45) m
+				- east: (28.75, 3.33) m
+				- west: (-27.33, -4.39) m
+			- The roundabout has four exit spots, located at: 
+				- north: (10.20, 26.28) m
+				- south: (-9.41, -26.53) m
+				- east: (27.97, -5.95) m
+				- west: (-27.31, 4.53) m
+		- The roundabout has two lanes. Every entry spot has two lanes, while the exit spots have one lane each.
+		- Vehicles are required to leave the roundabout from the exit lane, but due to traffic conditions and driver relaxation, that might not always be the case.
+		- Vehicles are required to observe a 40 km/h (11,1 m/s) speed limit around the roundabout. This is not always the case.   
