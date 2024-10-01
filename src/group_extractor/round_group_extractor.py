@@ -452,7 +452,7 @@ class RounDGroupExtractor:
                     # Check if the vehicle is already in the roundabout using the in_roundabout method
                     if not self.in_roundabout(*position):
                         # Initialize the ego vehicle with the first frame and entry point
-                        self.ego_vehicles[int(vehicle_id)] = [None, int(frame) - 1, entry_name]            
+                        self.ego_vehicles[int(vehicle_id)] = [None, int(frame), entry_name]            
 
         # Complete the ego vehicles information by including the first frame in which the ego vehicle appears
         for vehicle_id in self.ego_vehicles:
