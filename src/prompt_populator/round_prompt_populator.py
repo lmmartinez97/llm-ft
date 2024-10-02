@@ -379,7 +379,7 @@ def main():
         prompts_destination = "/Users/lmiguelmartinez/Tesis/llm-ft/data/rounD/prompts_200"
         template_path = "/Users/lmiguelmartinez/Tesis/llm-ft/src/prompt_populator/templates/rounD_templates"
     else:
-        groups_location = "/home/lmmartinez/Tesis/datasets/rounD/groups_200"
+        groups_location = "/home/lmmartinez/Tesis/llm-ft/data/rounD/groups_200"
         prompts_destination = "/home/lmmartinez/Tesis/llm-ft/data/rounD/prompts_200"
         template_path = "/home/lmmartinez/Tesis/llm-ft/src/prompt_populator/templates/rounD_templates"
     print(f"Loading groups from {groups_location}. \n")
