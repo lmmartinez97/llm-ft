@@ -604,8 +604,8 @@ def main():
         df_save_location = "/Users/lmiguelmartinez/Tesis/llm-ft/data/rounD/timing_rounD_400.csv"
     else:
         dataset_location = "/home/lmmartinez/Tesis/datasets/rounD/data/"
-        save_location = "/home/lmmartinez/Tesis/datasets/rounD/groups_400/"
-        df_save_location = "/home/lmmartinez/Tesis/datasets/rounD/timing_rounD_400.csv"
+        save_location = "/home/lmmartinez/Tesis/llm-ft/data/rounD/groups_400/"
+        df_save_location = "/home/lmmartinez/Tesis/llm-ft/data/rounD/timing_rounD_400.csv"
 
 
     print("Starting group extraction pipeline")
